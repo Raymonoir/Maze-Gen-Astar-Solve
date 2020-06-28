@@ -22,4 +22,16 @@ class Cell
     {
         this.walls[wallPos] = false;
     }
+
+    getWall(wallPos)
+    {
+        return this.walls[wallPos];
+    }
+
+    setColour(newColour)
+    {
+        this.colour = newColour;
+    }
+
+
 }
