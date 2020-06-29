@@ -5,8 +5,16 @@ class Cell
 {
     constructor(size, xPos, yPos, colour, id) 
     {
-        //This id will be used to identify each cell, used for A* maps 
+    
+
+        //Fields to be used for A*
+        this.gScore = Number.POSITIVE_INFINITY;
+        this.fScore = Number.POSITIVE_INFINITY;
+        this.cameFrom = null;
         this.id = id;
+
+
+
 
         this.visited = false;
 

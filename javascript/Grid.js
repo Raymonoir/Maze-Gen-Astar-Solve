@@ -2,17 +2,17 @@
 //Grid object stores a 2D array of cell objects
 class Grid
 {
-    constructor(canvasElement, columnCount, rowCount, cellSize, fillColour, lineColour) 
+    constructor(canvasElement, columnCount, rowCount, cellWidth, cellHeight, fillColour, lineColour) 
     {
         this.canvas = canvasElement;
         this.canvasContext = this.canvas.getContext("2d");
 
-        this.height = this.canvas.height;
-        this.width = this.canvas.width;
-
 
         this.grid = new Array();
-        this.cellSize = cellSize;
+
+
+        this.cellWidth = cellWidth;
+        this.cellHeight = cellHeight;
 
 
         this.columnCount = columnCount;
@@ -34,6 +34,43 @@ class Grid
     }
 
 
+
+    getAllAvailableNeighbours(cell)
+    {
+        let neighboursArray = [];
+        let currentCell = cell;
+
+        //For a neighbour to be available, they must be next to the current cell and not have a wall between them
+
+        //Above current cell, must have no wall between them 
+        if (currentCell.yPos > 0 && !this.grid[currentCell.xPos][currentCell.yPos - 1].getWall(2) && !currentCell.getWall(0))
+        {
+            neighboursArray.push(this.grid[currentCell.xPos][currentCell.yPos - 1]);
+        }
+
+        //Right of currentCell
+        if (currentCell.xPos < this.columnCount-1 && !this.grid[currentCell.xPos + 1][currentCell.yPos].getWall(3) && !currentCell.getWall(1))
+        {
+            neighboursArray.push(this.grid[currentCell.xPos + 1][currentCell.yPos]);
+        }
+
+        //Below currentCell
+        if (currentCell.yPos < this.rowCount-1 && !this.grid[currentCell.xPos][currentCell.yPos + 1].getWall(0)  && !currentCell.getWall(2))
+        {
+            neighboursArray.push(this.grid[currentCell.xPos][currentCell.yPos + 1]);
+        }
+
+        //Left of currentCell
+        if (currentCell.xPos > 0 && !this.grid[currentCell.xPos -1][currentCell.yPos].getWall(1) && !currentCell.getWall(3))
+        {
+            neighboursArray.push(this.grid[currentCell.xPos -1][currentCell.yPos]);
+        }
+
+        return neighboursArray;
+
+    }
+
+
     //returns a random unvisited neighbour of the provided cell
     getRandomNeighbour(cell)
     {
@@ -49,13 +86,13 @@ class Grid
         }
 
         //Right of currentCell
-        if (currentCell.xPos < this.rowCount-1 && !this.grid[currentCell.xPos + 1][currentCell.yPos].visited)
+        if (currentCell.xPos < this.columnCount-1 && !this.grid[currentCell.xPos + 1][currentCell.yPos].visited)
         {
             neighboursArray.push(this.grid[currentCell.xPos + 1][currentCell.yPos]);
         }
 
         //Below currentCell
-        if (currentCell.yPos < this.columnCount-1 && !this.grid[currentCell.xPos][currentCell.yPos + 1].visited)
+        if (currentCell.yPos < this.rowCount-1 && !this.grid[currentCell.xPos][currentCell.yPos + 1].visited)
         {
             neighboursArray.push(this.grid[currentCell.xPos][currentCell.yPos + 1]);
         }
@@ -119,12 +156,14 @@ class Grid
     //Generated the grid of cells
     generateGrid()
     {
+        let id = 0;
         for(let column = 0; column < this.columnCount; column++)
         {
             this.grid.push(new Array());
             for (let row = 0; row < this.rowCount; row++)
             {
-                this.grid[column][row] = new Cell(this.cellSize,column,row, this.fillColour, column.toString() + row.toString());
+                this.grid[column][row] = new Cell(this.cellSize,column,row, this.fillColour, id);
+                id++;
             }
         }
     }
@@ -140,13 +179,19 @@ class Grid
     //Draws all lines of each cell on the grid
     drawGrid()
     {
+
+
+
+        // document.getElementById("main-canvas").getContext("2d").fillStyle = "rgb(255,255,255)"
+        // document.getElementById("main-canvas").getContext("2d").font = "50px Helvetica";
+        // document.getElementById("main-canvas").getContext("2d").textAlign = "center";
+        // document.getElementById("main-canvas").getContext("2d").fillText("Raymond Ward",this.width/2,this.height / 2);
+
+
+
         this.canvasContext.beginPath()
-        this.canvasContext.lineWidth = 1;
-        this.canvasContext.strokeStyle = self.lineColor;
+        this.canvasContext.lineWidth = 0.3;
         
-
-
-
         for(let column = 0; column < this.columnCount; column++)
         {
             for (let row = 0; row < this.rowCount; row++)
@@ -154,37 +199,41 @@ class Grid
                 //Top
                 if (this.grid[column][row].getWall(0))
                 {  
-                    this.canvasContext.moveTo(column * this.cellSize+1, row * this.cellSize+1);
-                    this.canvasContext.lineTo((column+1) * this.cellSize+1, row * this.cellSize+1);
+                    this.canvasContext.moveTo(column * this.cellWidth+1, row * this.cellHeight+1);
+                    this.canvasContext.lineTo((column+1) * this.cellWidth+1, row * this.cellHeight+1);
                 }
 
                 //Right
                 if (this.grid[column][row].getWall(1))
                 {
-                    this.canvasContext.moveTo((column+1) * this.cellSize+1, row * this.cellSize+1);
-                    this.canvasContext.lineTo((column+1) * this.cellSize+1, (row+1) * this.cellSize+1);
+                    this.canvasContext.moveTo((column+1) * this.cellWidth+1, row * this.cellHeight+1);
+                    this.canvasContext.lineTo((column+1) * this.cellWidth+1, (row+1) * this.cellHeight+1);
                 }
 
                 //Bottom
                 if (this.grid[column][row].getWall(2))
                 {
-                    this.canvasContext.moveTo((column+1) * this.cellSize+1, (row +1)* this.cellSize+1);
-                    this.canvasContext.lineTo(column * this.cellSize+1, (row+1) * this.cellSize+1);
+                    this.canvasContext.moveTo((column+1) * this.cellWidth+1, (row +1)* this.cellHeight+1);
+                    this.canvasContext.lineTo(column * this.cellWidth+1, (row+1) * this.cellHeight+1);
                 }
 
                 //Left
                 if (this.grid[column][row].getWall(3))
                 {
-                    this.canvasContext.moveTo(column * this.cellSize+1, (row+1) * this.cellSize+1);
-                    this.canvasContext.lineTo(column * this.cellSize+1, row * this.cellSize+1);
+                    this.canvasContext.moveTo(column * this.cellWidth+1, (row+1) * this.cellHeight+1);
+                    this.canvasContext.lineTo(column * this.cellWidth+1, row * this.cellHeight+1);
                 }
 
 
+
+                //console.log(this.grid[column][row].colour);
                 this.canvasContext.fillStyle = this.grid[column][row].colour;
-                this.canvasContext.fillRect(column * this.cellSize, row * this.cellSize, this.cellSize, this.cellSize);
-                this.canvasContext.stroke();
+                this.canvasContext.fillRect(column * this.cellWidth, row * this.cellHeight, this.cellWidth, this.cellHeight);
+                this.canvasContext.strokeStyle = this.lineColour;
+                
             }
         }
+        this.canvasContext.stroke();
     
 
     }
