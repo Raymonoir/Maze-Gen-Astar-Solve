@@ -16,17 +16,14 @@ function windowResize()
 {
     grid.clearGrid();
     canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight * 0.9;
+    canvas.height = window.innerHeight;
 
     cellWidth = window.innerWidth / cellColumns;
-    cellHeight = (window.innerHeight * 0.9) / cellRows;
+    cellHeight = (window.innerHeight) / cellRows;
 
-    if ((Math.abs(cellWidth - cellHeight)/cellHeight) * 100 > 30)
+    if ((Math.abs(cellWidth - cellHeight)/cellHeight) * 100 > 10)
     {
-        cellWidth = cellHeight = Math.min(window.innerWidth / cellColumns, (window.innerHeight * 0.9) / cellRows);
-        
-        console.log(cellHeight);
-        console.log(cellWidth);
+        cellWidth = cellHeight = Math.min(window.innerWidth / cellColumns, (window.innerHeight) / cellRows);
     }
 
     grid.cellHeight = cellHeight;
@@ -49,6 +46,7 @@ function keyDown(event)
         if (backtrack.speed > 0)
         {
             backtrack.speed -= 10;
+
         }
         
     }
@@ -78,7 +76,7 @@ let cellColumns = 50;
 let cellRows = 25;
 
 let cellWidth = window.innerWidth / cellColumns;
-let cellHeight = (window.innerHeight * 0.9) / cellRows;
+let cellHeight = (window.innerHeight) / cellRows;
 
 
 let grid = new Grid(document.getElementById("main-canvas"),cellColumns,cellRows,cellWidth, cellHeight, "rgba(51,51,51,0.3)", "rgba(150,150,150,0.5)");

@@ -8,7 +8,7 @@ class AStar
 
 
 
-        this.speed = 1;
+        this.speed = 75;
         this.closedSet = [];
         this.openSet = new PriorityQueue();
 
@@ -45,8 +45,7 @@ class AStar
         this.highlightCorrectCells(currentCell);
 
         this.grid.getAllAvailableNeighbours(currentCell).forEach((nextCell) =>
-        {
-            console.log("yolo");   
+        { 
             let tempGScore = currentCell.gScore + 1;
 
             if (tempGScore < nextCell.gScore)
@@ -75,36 +74,19 @@ class AStar
 
     highlightCorrectCells(currentCell)
     {
+        let ctx = this.grid.canvasContext;
 
-        for(let column = 0; column < this.grid.columnCount; column++)
+        ctx.strokeStyle = "rgb(0,255,0)";
+        ctx.lineWidth = 4;
+        ctx.moveTo(49.5 * this.grid.cellWidth, 24.5 * this.grid.cellHeight);
+
+        ctx.beginPath()
+        while (currentCell != null)
         {
-            for (let row = 0; row < this.grid.rowCount; row++)
-            {
-                let cell = this.grid.getCell(column,row);
-
-
-                // if(this.closedSet.includes(cell.id))
-                // {
-                //     //cell.colour = "rgba(255,200,200,0.2)";
-                // }
-                // else if (this.openSet.contains(cell))
-                // {
-                //     //cell.colour = "rgba(50,90,50,0.2)";
-                // }
-                if (cell.id == currentCell.id)
-                {
-                    cell.colour = "rgba(80,200,40,0.2)";
-                }
-                else 
-                {
-                    cell.colour = this.grid.fillColour;
-                }
-
-
-
-            }
-
+            ctx.lineTo((currentCell.xPos + 0.5) * this.grid.cellWidth, (currentCell.yPos + 0.5) * this.grid.cellHeight);
+            currentCell = currentCell.cameFrom;
         }
+        ctx.stroke();
 
 
     }
@@ -116,7 +98,7 @@ class AStar
         {
             this.doNextIteration()
             
-            setTimeout(() => {this.startAStar();}, 20);
+            setTimeout(() => {this.startAStar();}, this.speed );
         }
         else
         {
@@ -129,18 +111,9 @@ class AStar
 
                 let currentCell = this.endCell;
 
-                let ctx = this.grid.canvasContext;
+                
 
-                ctx.strokeStyle = "rgb(0,255,0)";
-                ctx.moveTo(49.5 * this.grid.cellWidth, 24.5 * this.grid.cellHeight);
-
-                ctx.beginPath()
-                while (currentCell.cameFrom != null)
-                {
-                    ctx.lineTo((currentCell.xPos + 0.5) * this.grid.cellWidth, (currentCell.yPos + 0.5) * this.grid.cellHeight);
-                    currentCell = currentCell.cameFrom;
-                }
-                ctx.stroke();
+                
 
                 this.grid.drawGrid();
 
