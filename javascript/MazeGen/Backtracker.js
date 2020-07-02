@@ -5,12 +5,13 @@
 //Altered slightly to allow me to animate the process
 class Backtracker
 {
-    constructor(grid, initalCellX, initialCellY,currentCellColour,speed) 
+    constructor(grid, initalCellX, initialCellY,currentCellColour,aStar,speed) 
     {
         
         this.currentCellColour = currentCellColour;
         this.cellStack = new Stack();
 
+        this.speed = speed
         this.grid = grid;
 
         this.initalCell = grid.getCell(initalCellX,initialCellY);
@@ -20,7 +21,7 @@ class Backtracker
         
         this.grid.drawGrid();
 
-        this.speed = speed;
+        this.aStar = aStar;
 
         this.startBacktrack();
 
@@ -47,11 +48,18 @@ class Backtracker
             }
 
 
-            let astar = new AStar(this.grid, this.grid.getCell(0,0), this.grid.getCell(49, 24));
-            astar.startAStar();
+            
+            this.aStar.startAStar();
             
         }
     }
+
+
+    increaseSpeed()
+    {
+
+    }
+
 
 
     //Performs a single iteration of the back tracking algorithm

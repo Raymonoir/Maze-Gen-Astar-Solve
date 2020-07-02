@@ -1,6 +1,6 @@
 class AStar
 {
-    constructor(grid, startCell, endCell) 
+    constructor(grid, startCell, endCell,speed) 
     {   
         this.startCell = startCell;
         this.endCell = endCell;
@@ -8,7 +8,7 @@ class AStar
 
 
 
-        this.speed = 75;
+        this.speed = speed;
         this.closedSet = [];
         this.openSet = new PriorityQueue();
 
@@ -78,7 +78,7 @@ class AStar
 
         ctx.strokeStyle = "rgb(0,255,0)";
         ctx.lineWidth = 4;
-        ctx.moveTo(49.5 * this.grid.cellWidth, 24.5 * this.grid.cellHeight);
+        ctx.moveTo(29.5 * this.grid.cellWidth, 14.5 * this.grid.cellHeight);
 
         ctx.beginPath()
         while (currentCell != null)
